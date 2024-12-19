@@ -12,14 +12,14 @@ const SettingsPage = () => {
     const { theme, setTheme } = useThemeStore();
 
     return (
-        <div className="h-[100dvh] container mx-auto px-4 pt-20 max-w-5xl">
+        <div className="mx-auto px-4 pt-20 pb-10 max-w-5xl container">
             <div className="space-y-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-lg font-semibold">Theme</h2>
-                    <p className="text-sm text-base-content/70">Choose a theme for your chat interface</p>
+                    <h2 className="font-semibold text-lg">Theme</h2>
+                    <p className="text-base-content/70 text-sm">Choose a theme for your chat interface</p>
                 </div>
 
-                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                <div className="gap-2 grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8">
                     {THEMES.map((t) => (
                         <button
                             key={t}
@@ -28,15 +28,15 @@ const SettingsPage = () => {
                     ${theme === t ? "bg-base-200" : "hover:bg-base-200/50"}`}
                             onClick={() => setTheme(t)}
                         >
-                            <div className="relative h-8 w-full rounded-md overflow-hidden" data-theme={t}>
-                                <div className="absolute inset-0 grid grid-cols-4 gap-px p-1">
-                                    <div className="rounded bg-primary"></div>
-                                    <div className="rounded bg-secondary"></div>
-                                    <div className="rounded bg-accent"></div>
-                                    <div className="rounded bg-neutral"></div>
+                            <div className="relative rounded-md w-full h-8 overflow-hidden" data-theme={t}>
+                                <div className="absolute inset-0 gap-px grid grid-cols-4 p-1">
+                                    <div className="bg-primary rounded"></div>
+                                    <div className="bg-secondary rounded"></div>
+                                    <div className="bg-accent rounded"></div>
+                                    <div className="bg-neutral rounded"></div>
                                 </div>
                             </div>
-                            <span className="text-[11px] font-medium truncate w-full text-center">
+                            <span className="w-full font-medium text-[11px] text-center truncate">
                                 {t.charAt(0).toUpperCase() + t.slice(1)}
                             </span>
                         </button>
@@ -44,27 +44,27 @@ const SettingsPage = () => {
                 </div>
 
                 {/* Preview Section */}
-                <h3 className="text-lg font-semibold mb-3">Preview</h3>
-                <div className="rounded-xl border border-base-300 overflow-hidden bg-base-100 shadow-lg">
-                    <div className="p-4 bg-base-200">
-                        <div className="max-w-lg mx-auto">
+                <h3 className="mb-3 font-semibold text-lg">Preview</h3>
+                <div className="bg-base-100 shadow-lg border border-base-300 rounded-xl overflow-hidden">
+                    <div className="bg-base-200 p-4">
+                        <div className="mx-auto max-w-lg">
                             {/* Mock Chat UI */}
-                            <div className="bg-base-100 rounded-xl shadow-sm overflow-hidden">
+                            <div className="bg-base-100 shadow-sm rounded-xl overflow-hidden">
                                 {/* Chat Header */}
-                                <div className="px-4 py-3 border-b border-base-300 bg-base-100">
+                                <div className="bg-base-100 px-4 py-3 border-b border-base-300">
                                     <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium">
+                                        <div className="flex justify-center items-center bg-primary rounded-full w-8 h-8 font-medium text-primary-content">
                                             J
                                         </div>
                                         <div>
                                             <h3 className="font-medium text-sm">John Doe</h3>
-                                            <p className="text-xs text-base-content/70">Online</p>
+                                            <p className="text-base-content/70 text-xs">Online</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Chat Messages */}
-                                <div className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100">
+                                <div className="space-y-4 bg-base-100 p-4 min-h-[200px] max-h-[200px] overflow-y-auto">
                                     {PREVIEW_MESSAGES.map((message) => (
                                         <div
                                             key={message.id}
@@ -89,16 +89,16 @@ const SettingsPage = () => {
                                 </div>
 
                                 {/* Chat Input */}
-                                <div className="p-4 border-t border-base-300 bg-base-100">
+                                <div className="bg-base-100 p-4 border-t border-base-300">
                                     <div className="flex gap-2">
                                         <input
                                             type="text"
-                                            className="input input-bordered flex-1 text-sm h-10"
+                                            className="input-bordered w-full h-10 text-sm input pe-2"
                                             placeholder="Type a message..."
                                             value="This is a preview"
                                             readOnly
                                         />
-                                        <button className="btn btn-primary h-10 min-h-0">
+                                        <button className="h-10 min-h-0 btn btn-primary">
                                             <Send size={18} />
                                         </button>
                                     </div>

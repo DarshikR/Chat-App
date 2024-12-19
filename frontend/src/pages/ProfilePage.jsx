@@ -22,11 +22,11 @@ const ProfilePage = () => {
     };
 
     return (
-        <div className="h-[100dvh] pt-20">
-            <div className="max-w-2xl mx-auto p-4 py-8">
-                <div className="bg-base-300 rounded-xl p-6 space-y-8">
+        <div className="pt-6">
+            <div className="mx-auto p-4 pb-8 max-w-2xl">
+                <div className="space-y-8 bg-base-300 p-6 rounded-xl">
                     <div className="text-center">
-                        <h1 className="text-2xl font-semibold ">Profile</h1>
+                        <h1 className="font-semibold text-2xl">Profile</h1>
                         <p className="mt-2">Your profile information</p>
                     </div>
 
@@ -37,7 +37,7 @@ const ProfilePage = () => {
                             <img
                                 src={selectedImg || authUser.profilePic || "/avatar.png"}
                                 alt="Profile"
-                                className="size-32 rounded-full object-cover border-4 "
+                                className="border-4 rounded-full object-cover size-32"
                             />
                             <label
                                 htmlFor="avatar-upload"
@@ -67,30 +67,30 @@ const ProfilePage = () => {
 
                     <div className="space-y-6">
                         <div className="space-y-1.5">
-                            <div className="text-sm text-zinc-400 flex items-center gap-2">
+                            <div className="flex items-center gap-2 text-sm text-zinc-400">
                                 <User className="w-4 h-4" />
                                 Full Name
                             </div>
-                            <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.fullName}</p>
+                            <p className="bg-base-200 px-4 py-2.5 border rounded-lg">{authUser?.fullName}</p>
                         </div>
 
                         <div className="space-y-1.5">
-                            <div className="text-sm text-zinc-400 flex items-center gap-2">
+                            <div className="flex items-center gap-2 text-sm text-zinc-400">
                                 <Mail className="w-4 h-4" />
                                 Email Address
                             </div>
-                            <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
+                            <p className="bg-base-200 px-4 py-2.5 border rounded-lg">{authUser?.email}</p>
                         </div>
                     </div>
 
-                    <div className="mt-6 bg-base-300 rounded-xl p-6">
-                        <h2 className="text-lg font-medium  mb-4">Account Information</h2>
+                    <div className="bg-base-300 mt-6 p-6 rounded-xl">
+                        <h2 className="mb-4 font-medium text-lg">Account Information</h2>
                         <div className="space-y-3 text-sm">
-                            <div className="flex items-center justify-between py-2 border-b border-zinc-700">
+                            <div className="flex justify-between items-center border-zinc-700 py-2 border-b">
                                 <span>Member Since</span>
                                 <span>{authUser.createdAt?.split("T")[0]}</span>
                             </div>
-                            <div className="flex items-center justify-between py-2">
+                            <div className="flex justify-between items-center py-2">
                                 <span>Account Status</span>
                                 <span className="text-green-500">Active</span>
                             </div>
