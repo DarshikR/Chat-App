@@ -44,36 +44,40 @@ const ChatContainer = () => {
                 <MessageInput />
             </div>
         );
-    }
+    };
+
+    const groupMessagesByDate = (messages) => {
+        return messages.reduce((groups, message) => {
+            const date = new Date(message.createdAt).toDateString(); // Group by `toDateString`
+            if (!groups[date]) {
+                groups[date] = [];
+            }
+            groups[date].push(message);
+            return groups;
+        }, {});
+    };
 
     return (
         <div className="flex flex-col flex-1 overflow-auto">
             <ChatHeader />
 
-            <div className="flex-1 space-y-4 p-4 overflow-y-auto">
+            <div className="flex-1 space-y-3.5 p-4 overflow-y-auto">
                 {messages.length === 0 && !isMessagesLoading && ( // Check for empty messages and not loading state
                     <div className="text-center">
                         No Messages here. <br /> Start Conversation Now!
                     </div>
                 )}
-                {messages.map((message, index) => {
-                    const showDateHeader = shouldShowDateHeader(
-                        message,
-                        messages[index - 1]
-                    );
-
-                    return (
-                        <React.Fragment key={message._id}>
-                            {showDateHeader && (
-                                <div className="mx-auto text-xs p-1 px-1.5 rounded-md bg-base-300 w-fit my-2">
-                                    {formatMessageDate(message.createdAt)}
-                                </div>
-                            )}
+                {Object.entries(groupMessagesByDate(messages)).map(([date, groupMessages], index) => (
+                    <div key={date}>
+                        <div
+                            className="sticky top-0 mx-auto text-xs p-1 px-1.5 rounded-md bg-base-300/60 backdrop-blur w-fit z-10"
+                        >
+                            {formatMessageDate(date)}
+                        </div>
+                        {groupMessages.map((message) => (
                             <div
-                                className={`chat ${
-                                    message.senderId === authUser._id
-                                        ? 'chat-end'
-                                        : 'chat-start'
+                                key={message._id}
+                                className={`chat ${message.senderId === authUser._id ? 'chat-end' : 'chat-start'
                                     }`}
                                 ref={index === messages.length - 1 ? messageEndRef : null}
                             >
@@ -105,9 +109,9 @@ const ChatContainer = () => {
                                     {message.text && <p>{message.text}</p>}
                                 </div>
                             </div>
-                        </React.Fragment>
-                    );
-                })}
+                        ))}
+                    </div>
+                ))}
             </div>
 
             <MessageInput />
