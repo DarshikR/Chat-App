@@ -27,14 +27,14 @@ const ChatContainer = () => {
     }, [messages]);
 
     // Helper function to determine if a new date header should be shown
-    const shouldShowDateHeader = (currentMessage, previousMessage) => {
-        const currentDate = new Date(currentMessage.createdAt).toDateString();
-        const previousDate = previousMessage
-            ? new Date(previousMessage.createdAt).toDateString()
-            : null;
+    // const shouldShowDateHeader = (currentMessage, previousMessage) => {
+    //     const currentDate = new Date(currentMessage.createdAt).toDateString();
+    //     const previousDate = previousMessage
+    //         ? new Date(previousMessage.createdAt).toDateString()
+    //         : null;
 
-        return currentDate !== previousDate;
-    };
+    //     return currentDate !== previousDate;
+    // };
 
     if (isMessagesLoading) {
         return (
@@ -74,12 +74,17 @@ const ChatContainer = () => {
                         >
                             {formatMessageDate(date)}
                         </div>
-                        {groupMessages.map((message) => (
+                        {groupMessages.map((message, i) => (
                             <div
                                 key={message._id}
                                 className={`chat ${message.senderId === authUser._id ? 'chat-end' : 'chat-start'
                                     }`}
-                                ref={index === groupMessages.length - 1 ? messageEndRef : null}
+                                ref={
+                                    index === Object.entries(groupMessagesByDate(messages)).length - 1 &&
+                                    i === groupMessages.length - 1
+                                        ? messageEndRef
+                                        : null
+                                }
                             >
                                 <div className="avatar chat-image">
                                     <div className="border rounded-full size-10">
