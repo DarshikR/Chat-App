@@ -79,7 +79,7 @@ const ChatContainer = () => {
                                 key={message._id}
                                 className={`chat ${message.senderId === authUser._id ? 'chat-end' : 'chat-start'
                                     }`}
-                                ref={index === messages.length - 1 ? messageEndRef : null}
+                                ref={index === groupMessages.length - 1 ? messageEndRef : null}
                             >
                                 <div className="avatar chat-image">
                                     <div className="border rounded-full size-10">
