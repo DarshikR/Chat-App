@@ -19,13 +19,13 @@ const Sidebar = () => {
     if (isUsersLoading) return <SidebarSkeleton users={users.length} />
 
     return (
-        <aside className="flex flex-col border-r border-base-300 w-20 lg:w-72 h-full transition-all duration-200">
-            <div className="p-5 border-b border-base-300 w-full">
+        <aside className="flex flex-col border-r border-base-300 w-full sm:w-20 lg:w-72 h-full transition-all duration-200">
+            <div className="p-3.5 sm:p-4 flex sm:block items-center justify-between border-b border-base-300 w-full">
                 <div className="flex items-center gap-2">
                     <Users className="size-6" />
-                    <span className="lg:block hidden font-medium">Contacts</span>
+                    <span className="sm:hidden lg:block font-medium">Contacts</span>
                 </div>
-                <div className="lg:flex items-center gap-2 hidden mt-3">
+                <div className="flex flex-wrap sm:hidden lg:flex items-center gap-2 sm:mt-3">
                     <label className="flex items-center gap-2 cursor-pointer">
                         <input
                             type="checkbox"
@@ -33,13 +33,13 @@ const Sidebar = () => {
                             onChange={(e) => setShowOnlineOnly(e.target.checked)}
                             className="checkbox checkbox-sm"
                         />
-                        <span className="text-sm">Show online only</span>
+                        <span className="text-sm flex gap-1">Show online <a className='hidden sm:block'>only</a></span>
                     </label>
                     <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
                 </div>
             </div>
 
-            <div className="py-3 w-full overflow-y-auto">
+            <div className="py-3 w-full overflow-y-auto h-[calc(100dvh-8rem)]">
                 {filteredUsers.map((user) => (
                     <button
                         key={user._id}
@@ -51,7 +51,7 @@ const Sidebar = () => {
                         `}
                         title={user.fullName}
                     >
-                        <div className="relative mx-auto lg:mx-0">
+                        <div className="relative sm:mx-auto lg:mx-0">
                             <img
                                 src={user.profilePic || "/avatar.png"}
                                 alt={user.fullName}
@@ -63,8 +63,8 @@ const Sidebar = () => {
                         </div>
 
                         {/* User info - only visible on larger screens */}
-                        <div className="lg:block hidden min-w-0 text-left">
-                            <div className="font-medium truncate">{user.fullName}</div>
+                        <div className="sm:hidden lg:block min-w-0 text-left">
+                            <div className="sm:font-medium truncate">{user.fullName}</div>
                             <div className="text-sm text-zinc-400">
                                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
                             </div>

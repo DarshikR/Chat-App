@@ -38,16 +38,16 @@ const SignUpPage = () => {
         <div className="grid lg:grid-cols-2">
             {/* left side */}
             <div className="flex flex-col justify-center items-center p-6 sm:p-12">
-                <div className="space-y-8 w-full max-w-md">
+                <div className="w-full max-w-md space-y-8">
                     {/* LOGO */}
-                    <div className="mb-8 text-center">
+                    <div className="text-center mb-8">
                         <div className="flex flex-col items-center gap-2 group">
                             <div
-                                className="group-hover:bg-primary/20 flex justify-center items-center bg-primary/10 rounded-xl transition-colors size-12"
+                                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors"
                             >
-                                <MessageSquare className="text-primary size-6" />
+                                <MessageSquare className="size-6 text-primary" />
                             </div>
-                            <h1 className="mt-2 font-bold text-2xl">Create Account</h1>
+                            <h1 className="text-2xl font-bold mt-2">Create Account</h1>
                             <p className="text-base-content/60">Get started with your free account</p>
                         </div>
                     </div>
@@ -55,11 +55,11 @@ const SignUpPage = () => {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="form-control">
                             <label className="label">
-                                <span className="font-medium label-text">Full Name</span>
+                                <span className="label-text font-medium">Full Name</span>
                             </label>
                             <div className="relative">
-                                <div className="left-0 absolute inset-y-0 flex items-center pl-3 pointer-events-none">
-                                    <User className="text-base-content/40 size-5" />
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <User className="size-5 text-base-content/40" />
                                 </div>
                                 <input
                                     type="text"
@@ -73,11 +73,11 @@ const SignUpPage = () => {
 
                         <div className="form-control">
                             <label className="label">
-                                <span className="font-medium label-text">Email</span>
+                                <span className="label-text font-medium">Email</span>
                             </label>
                             <div className="relative">
-                                <div className="left-0 absolute inset-y-0 flex items-center pl-3 pointer-events-none">
-                                    <Mail className="text-base-content/40 size-5" />
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Mail className="size-5 text-base-content/40" />
                                 </div>
                                 <input
                                     type="email"
@@ -91,11 +91,11 @@ const SignUpPage = () => {
 
                         <div className="form-control">
                             <label className="label">
-                                <span className="font-medium label-text">Password</span>
+                                <span className="label-text font-medium">Password</span>
                             </label>
                             <div className="relative">
-                                <div className="left-0 absolute inset-y-0 flex items-center pl-3 pointer-events-none">
-                                    <Lock className="text-base-content/40 size-5" />
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Lock className="size-5 text-base-content/40" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -106,22 +106,22 @@ const SignUpPage = () => {
                                 />
                                 <button
                                     type="button"
-                                    className="right-0 absolute inset-y-0 flex items-center pr-3"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
                                     {showPassword ? (
-                                        <EyeOff className="text-base-content/40 size-5" />
+                                        <EyeOff className="size-5 text-base-content/40" />
                                     ) : (
-                                        <Eye className="text-base-content/40 size-5" />
+                                        <Eye className="size-5 text-base-content/40" />
                                     )}
                                 </button>
                             </div>
                         </div>
 
-                        <button type="submit" className="w-full btn btn-primary" disabled={isSigningUp}>
+                        <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
                             {isSigningUp ? (
                                 <>
-                                    <Loader2 className="animate-spin size-5" />
+                                    <Loader2 className="size-5 animate-spin" />
                                     Loading...
                                 </>
                             ) : (

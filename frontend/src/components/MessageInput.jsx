@@ -48,7 +48,7 @@ const MessageInput = () => {
     };
 
     return (
-        <div className="p-4 w-full">
+        <div className="p-2 sm:p-4 w-full border-t">
             {imagePreview && (
                 <div className="mb-3 flex items-center gap-2">
                     <div className="relative">
@@ -87,7 +87,7 @@ const MessageInput = () => {
 
                     <button
                         type="button"
-                        className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+                        className={`btn btn-circle btn-sm sm:btn-md ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
                         onClick={() => fileInputRef.current?.click()}
                     >
                         <Image size={20} />
@@ -95,10 +95,10 @@ const MessageInput = () => {
                 </div>
                 <button
                     type="submit"
-                    className="btn btn-circle"
+                    className="btn btn-circle btn-sm sm:btn-md"
                     disabled={!text.trim() && !imagePreview}
                 >
-                    <Send size={22} />
+                    <Send className="size-5 sm:size-[22px]" />
                 </button>
             </form>
         </div>

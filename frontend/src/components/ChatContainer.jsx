@@ -58,10 +58,10 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="flex flex-col flex-1 overflow-auto">
+        <div className="flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-white">
             <ChatHeader />
 
-            <div className="flex-1 space-y-3.5 p-4 overflow-y-auto">
+            <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto">
                 {messages.length === 0 && !isMessagesLoading && ( // Check for empty messages and not loading state
                     <div className="text-center">
                         No Messages here. <br /> Start Conversation Now!
@@ -108,7 +108,7 @@ const ChatContainer = () => {
                                         <img
                                             src={message.image}
                                             alt="Attachment"
-                                            className="mb-2 rounded-md sm:max-w-[200px]"
+                                            className="mb-2 rounded-md max-w-[160px] sm:max-w-[200px]"
                                         />
                                     )}
                                     {message.text && <p>{message.text}</p>}
