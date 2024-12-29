@@ -58,7 +58,7 @@ const Sidebar = () => {
                                 className="rounded-full object-cover size-12"
                             />
                             {onlineUsers.includes(user._id) && (
-                                <span className="right-0 bottom-0 absolute bg-green-500 rounded-full ring-2 ring-zinc-900 size-3" />
+                                <span className="right-0 bottom-0 absolute bg-green-500 rounded-full ring-2 ring-base-100/80 size-3" />
                             )}
                         </div>
 
