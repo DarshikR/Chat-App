@@ -6,28 +6,11 @@ import MessageInput from './MessageInput';
 import MessageSkeleton from './skeletons/MessageSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime, formatMessageDate } from '../lib/utils';
-import { useKeyboardHeightAdjust } from '../store/useKeyboardHeightAdjust';
 
 const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
-
-    const keyboardVisible = useKeyboardHeightAdjust();
-    const messageInputRef = useRef(null);
-
-    useEffect(() => {
-        if (keyboardVisible && messageInputRef.current) {
-            console.log("Keyboard detected, scrolling to input...");
-            messageInputRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-        }
-    }, [keyboardVisible]);
-
-    useEffect(() => {
-        if (messageEndRef.current && messages) {
-            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [messages]);
 
     useEffect(() => {
         getMessages(selectedUser._id);
@@ -36,6 +19,12 @@ const ChatContainer = () => {
 
         return () => unsubscribeFromMessages();
     }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+
+    useEffect(() => {
+        if (messageEndRef.current && messages) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     // Helper function to determine if a new date header should be shown
     // const shouldShowDateHeader = (currentMessage, previousMessage) => {
@@ -69,7 +58,7 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className={`flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100 ${keyboardVisible ? 'pb-[env(safe-area-inset-bottom)]' : ''}`}>
+        <div className="flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100">
             <ChatHeader />
 
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto">
@@ -92,7 +81,7 @@ const ChatContainer = () => {
                                     }`}
                                 ref={
                                     index === Object.entries(groupMessagesByDate(messages)).length - 1 &&
-                                        i === groupMessages.length - 1
+                                    i === groupMessages.length - 1
                                         ? messageEndRef
                                         : null
                                 }
@@ -130,7 +119,7 @@ const ChatContainer = () => {
                 ))}
             </div>
 
-            <MessageInput ref={messageInputRef} />
+            <MessageInput />
         </div>
     );
 };

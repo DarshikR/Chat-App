@@ -1,9 +1,9 @@
-import { useRef, useState, forwardRef } from "react";
+import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 
-const MessageInput = forwardRef((props, ref) => {
+const MessageInput = () => {
     const [text, setText] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
@@ -76,7 +76,6 @@ const MessageInput = forwardRef((props, ref) => {
                         placeholder="Type a message..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        ref={ref}
                     />
                     <input
                         type="file"
@@ -104,5 +103,5 @@ const MessageInput = forwardRef((props, ref) => {
             </form>
         </div>
     );
-});
+};
 export default MessageInput;
