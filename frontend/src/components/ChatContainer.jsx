@@ -68,7 +68,7 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className={`flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative ${keyboardVisible ? 'pb-[env(safe-area-inset-bottom)] bg-red-700' : ' bg-red-700'}`}>
+        <div className={`flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100 ${keyboardVisible ? 'pb-[env(safe-area-inset-bottom)]' : ''}`}>
             <ChatHeader />
 
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto">
