@@ -3,7 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 
-const MessageInput = () => {
+const MessageInput = ({ props, ref }) => {
     const [text, setText] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = useRef(null);
@@ -48,7 +48,7 @@ const MessageInput = () => {
     };
 
     return (
-        <div className="p-2 sm:p-4 w-full border-t border-base-300 bg-base-100">
+        <div ref={ref} className="p-2 sm:p-4 w-full border-t border-base-300 bg-base-100">
             {imagePreview && (
                 <div className="mb-3 flex items-center gap-2">
                     <div className="relative">
@@ -76,6 +76,7 @@ const MessageInput = () => {
                         placeholder="Type a message..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
+                        {...props}
                     />
                     <input
                         type="file"
