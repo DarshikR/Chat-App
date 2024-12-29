@@ -6,14 +6,14 @@ import MessageInput from './MessageInput';
 import MessageSkeleton from './skeletons/MessageSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime, formatMessageDate } from '../lib/utils';
-import { useKeyboardHeightAdjust } from '../store/useKeyboardHeightAdjust';
+import { useKeyboardDetection } from '../store/useKeyboardDetection';
 
 const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
 
-    const keyboardVisible = useKeyboardHeightAdjust();
+    const keyboardVisible = useKeyboardDetection();
     const messageInputRef = useRef(null);
 
     useEffect(() => {
