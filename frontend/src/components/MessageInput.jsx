@@ -48,7 +48,7 @@ const MessageInput = forwardRef((props, ref) => {
     };
 
     return (
-        <div ref={ref} className="p-2 sm:p-4 w-full border-t border-base-300 bg-base-100">
+        <div className="p-2 sm:p-4 w-full border-t border-base-300 bg-base-100">
             {imagePreview && (
                 <div className="mb-3 flex items-center gap-2">
                     <div className="relative">
@@ -71,12 +71,12 @@ const MessageInput = forwardRef((props, ref) => {
             <form onSubmit={handleSendMessage} className="flex items-center gap-2">
                 <div className="flex-1 flex gap-2">
                     <input
+                        ref={ref}
                         type="text"
                         className="w-full input input-bordered rounded-lg input-sm sm:input-md"
                         placeholder="Type a message..."
                         value={text}
                         onChange={(e) => setText(e.target.value)}
-                        {...props}
                     />
                     <input
                         type="file"
