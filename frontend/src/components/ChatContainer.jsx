@@ -6,21 +6,28 @@ import MessageInput from './MessageInput';
 import MessageSkeleton from './skeletons/MessageSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime, formatMessageDate } from '../lib/utils';
-import { useKeyboardDetection } from '../store/useKeyboardDetection';
+import { useKeyboardHeightAdjust } from '../store/useKeyboardHeightAdjust';
 
 const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
 
-    const keyboardVisible = useKeyboardDetection();
+    const keyboardVisible = useKeyboardHeightAdjust();
     const messageInputRef = useRef(null);
 
     useEffect(() => {
         if (keyboardVisible && messageInputRef.current) {
-            messageInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            console.log("Keyboard detected, scrolling to input...");
+            messageInputRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
         }
     }, [keyboardVisible]);
+
+    useEffect(() => {
+        if (messageEndRef.current && messages) {
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [messages]);
 
     useEffect(() => {
         getMessages(selectedUser._id);
@@ -29,12 +36,6 @@ const ChatContainer = () => {
 
         return () => unsubscribeFromMessages();
     }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
-
-    useEffect(() => {
-        if (messageEndRef.current && messages) {
-            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, [messages]);
 
     // Helper function to determine if a new date header should be shown
     // const shouldShowDateHeader = (currentMessage, previousMessage) => {

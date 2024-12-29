@@ -1,25 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from 'react';
 
-export const useKeyboardDetection = () => {
+export const useKeyboardHeightAdjust = () => {
     const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.visualViewport) {
-                const viewportHeight = window.visualViewport.height;
-                const windowHeight = window.innerHeight;
+            const viewportHeight = window.visualViewport?.height || window.innerHeight;
+            const windowHeight = window.innerHeight;
 
-                // If viewport height is significantly less than window height, the keyboard is likely open
-                setKeyboardVisible(viewportHeight < windowHeight * 0.85);
-            }
+            setKeyboardVisible(viewportHeight < windowHeight * 0.85);
         };
 
-        // Attach listeners for viewport changes
         window.visualViewport?.addEventListener("resize", handleResize);
+        window.addEventListener("resize", handleResize);
 
-        // Clean up listeners
+        handleResize(); // Initial check
+
         return () => {
             window.visualViewport?.removeEventListener("resize", handleResize);
+            window.removeEventListener("resize", handleResize);
         };
     }, []);
 
