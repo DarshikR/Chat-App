@@ -8,18 +8,20 @@ import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime, formatMessageDate } from '../lib/utils';
 
 const ChatContainer = () => {
-    const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
+    const { messages, getMessages, isMessagesLoading, selectedUser, setMessages, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
     const [loading, setLoading] = useState(true); // New state for 1-second delay
 
     useEffect(() => {
-        getMessages(selectedUser._id);
-
-        subscribeToMessages();
-
-        return () => unsubscribeFromMessages();
-    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+        if (selectedUser) {
+            // Clear messages before loading new ones
+            setMessages([]);
+            getMessages(selectedUser._id);
+            subscribeToMessages();
+            return () => unsubscribeFromMessages();
+        }
+    }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages, setMessages]);
 
     useEffect(() => {
         setLoading(true);
@@ -87,10 +89,10 @@ const ChatContainer = () => {
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto">
                 {messages.length > 0 ? null : (
                     <div className="text-center">
-                        No Messages here. <br /> Start Conversation Now!
+                        No messages yet. <br /> Start the conversation now!
                     </div>
                 )}
-                {Object.entries(groupMessagesByDate(messages)).map(([date, groupMessages], index) => (
+                {Object.entries(groupMessagesByDate(messages)).map(([date, groupMessages]) => (
                     <div key={date}>
                         <div
                             className="sticky top-0 mx-auto text-xs p-1 px-1.5 rounded-md bg-base-300/60 backdrop-blur w-fit z-10"
