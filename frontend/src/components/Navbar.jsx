@@ -2,9 +2,16 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import { useAuthStore } from '../store/useAuthStore';
 import { LogOut, MessageSquare, Settings, User } from "lucide-react";
+import { useChatStore } from '../store/useChatStore';
 
 const Navbar = () => {
     const { logout, authUser } = useAuthStore();
+    const { setSelectedUser } = useChatStore();
+
+    const handleLogout = () => {
+        logout();
+        setSelectedUser(null);
+    }
 
     return (
         <header className="bg-base-100 border-b border-base-300 sticky w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
@@ -35,7 +42,7 @@ const Navbar = () => {
                                     <span className="hidden sm:inline">Profile</span>
                                 </Link>
 
-                                <button className="flex gap-2 items-center" onClick={logout}>
+                                <button className="flex gap-2 items-center" onClick={handleLogout}>
                                     <LogOut className="size-5" />
                                     <span className="hidden sm:inline">Logout</span>
                                 </button>

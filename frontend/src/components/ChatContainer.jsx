@@ -1,5 +1,5 @@
 import { useChatStore } from '../store/useChatStore';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
@@ -11,6 +11,7 @@ const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
+    const [loading, setLoading] = useState(true); // New state for 1-second delay
 
     useEffect(() => {
         getMessages(selectedUser._id);
@@ -21,30 +22,19 @@ const ChatContainer = () => {
     }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
     useEffect(() => {
-        if (messageEndRef.current && messages) {
+        setLoading(true);
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 1500);
+
+        return () => clearTimeout(timer); // Cleanup timer on unmount
+    }, [selectedUser]);
+
+    useEffect(() => {
+        if (!loading && messageEndRef.current) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [messages]);
-
-    // Helper function to determine if a new date header should be shown
-    // const shouldShowDateHeader = (currentMessage, previousMessage) => {
-    //     const currentDate = new Date(currentMessage.createdAt).toDateString();
-    //     const previousDate = previousMessage
-    //         ? new Date(previousMessage.createdAt).toDateString()
-    //         : null;
-
-    //     return currentDate !== previousDate;
-    // };
-
-    if (isMessagesLoading) {
-        return (
-            <div className="flex flex-col flex-1 overflow-auto">
-                <ChatHeader />
-                <MessageSkeleton messages={messages} authUser={authUser} />
-                <MessageInput />
-            </div>
-        );
-    };
+    }, [messages, loading]);
 
     const groupMessagesByDate = (messages) => {
         return messages.reduce((groups, message) => {
@@ -57,12 +47,45 @@ const ChatContainer = () => {
         }, {});
     };
 
+    // Helper function to parse and convert URLs to clickable links
+    const renderMessageText = (text) => {
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const parts = text.split(urlRegex);
+
+        return parts.map((part, index) => {
+            if (urlRegex.test(part)) {
+                return (
+                    <a
+                        key={index}
+                        href={part}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline"
+                    >
+                        {part}
+                    </a>
+                );
+            }
+            return part;
+        });
+    };
+
+    if (isMessagesLoading || (loading && messages.length > 0)) {
+        return (
+            <div className="flex flex-col flex-1 overflow-auto">
+                <ChatHeader />
+                <MessageSkeleton messages={messages} authUser={authUser} />
+                <MessageInput />
+            </div>
+        );
+    };
+
     return (
         <div className="flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100">
             <ChatHeader />
 
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto">
-                {messages.length === 0 && !isMessagesLoading && ( // Check for empty messages and not loading state
+                {messages.length > 0 ? null : (
                     <div className="text-center">
                         No Messages here. <br /> Start Conversation Now!
                     </div>
@@ -79,12 +102,7 @@ const ChatContainer = () => {
                                 key={message._id}
                                 className={`chat ${message.senderId === authUser._id ? 'chat-end' : 'chat-start'
                                     }`}
-                                ref={
-                                    index === Object.entries(groupMessagesByDate(messages)).length - 1 &&
-                                    i === groupMessages.length - 1
-                                        ? messageEndRef
-                                        : null
-                                }
+                                ref={i === groupMessages.length - 1 ? messageEndRef : null}
                             >
                                 <div className="avatar chat-image">
                                     <div className="border rounded-full size-10">
@@ -111,7 +129,7 @@ const ChatContainer = () => {
                                             className="mb-2 rounded-md max-w-[160px] sm:max-w-[200px]"
                                         />
                                     )}
-                                    {message.text && <p>{message.text}</p>}
+                                    {message.text && <p>{renderMessageText(message.text)}</p>}
                                 </div>
                             </div>
                         ))}

@@ -9,14 +9,21 @@ const Sidebar = () => {
 
     const { onlineUsers } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
+    const [loading, setLoading] = useState(true); // New state for 2-second delay
 
     useEffect(() => {
         getUsers();
+
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 2000);
+
+        return () => clearTimeout(timer); // Cleanup timer on unmount
     }, [getUsers]);
 
     const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
 
-    if (isUsersLoading) return <SidebarSkeleton users={users.length} />
+    if (isUsersLoading || loading) return <SidebarSkeleton users={users.length} />
 
     return (
         <aside className="flex flex-col border-r border-base-300 w-full sm:w-20 lg:w-72 h-full transition-all duration-200">
