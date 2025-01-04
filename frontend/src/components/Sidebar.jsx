@@ -7,7 +7,7 @@ import { useAuthStore } from '../store/useAuthStore';
 const Sidebar = () => {
     const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
 
-    const { onlineUsers } = useAuthStore();
+    const { onlineUsers, authUser } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
     const [loading, setLoading] = useState(true); // New state for 2-second delay
 
@@ -73,7 +73,16 @@ const Sidebar = () => {
                         <div className="sm:hidden lg:block min-w-0 text-left">
                             <div className="sm:font-medium truncate">{user.fullName}</div>
                             <div className="text-sm text-zinc-400">
-                                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+                                {user.lastMessage
+                                    ? (
+                                        <>
+                                            {user.lastMessage.senderId === authUser._id ? 'Me: ' : ''}
+                                            {user.lastMessage.text || user.lastMessage.content}
+                                        </>
+                                    ) : (
+                                        onlineUsers.includes(user._id) ? 'Online' : 'Offline'
+                                    )
+                                }
                             </div>
                         </div>
                     </button>
