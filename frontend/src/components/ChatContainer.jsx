@@ -78,15 +78,22 @@ const ChatContainer = () => {
 
     // Helper function to parse and convert URLs to clickable links
     const renderMessageText = (text) => {
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const parts = text.split(urlRegex);
+        const urlRegex = /((https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g; // Updated URL regex to match domain-like text
+        const phoneRegex = /(\+?\d{1,3}[-.\s]??\d{1,4}[-.\s]??\d{1,4}[-.\s]??\d{1,9})/g; // Phone number regex
+        const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g; // Email regex
+        const combinedRegex = new RegExp(`${urlRegex.source}|${phoneRegex.source}|${emailRegex.source}`, 'g'); // Combine all regexes
 
-        return parts.map((part, index) => {
+        // Match all parts (URLs, phone numbers, emails, and plain text in between)
+        const matches = text.split(combinedRegex);
+
+        return matches.map((part, index) => {
             if (urlRegex.test(part)) {
+                // Add `http://` to the URL if it's not already present
+                const url = part.startsWith('http://') || part.startsWith('https://') ? part : `http://${part}`;
                 return (
                     <a
                         key={index}
-                        href={part}
+                        href={url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="underline"
@@ -94,7 +101,30 @@ const ChatContainer = () => {
                         {part}
                     </a>
                 );
+            } else if (phoneRegex.test(part)) {
+                // Render phone numbers as clickable `tel:` links
+                return (
+                    <a
+                        key={index}
+                        href={`tel:${part.replace(/\s+/g, '')}`} // Clean up phone numbers for `tel:` links
+                        className="underline"
+                    >
+                        {part}
+                    </a>
+                );
+            } else if (emailRegex.test(part)) {
+                // Render emails as clickable `mailto:` links
+                return (
+                    <a
+                        key={index}
+                        href={`mailto:${part}`}
+                        className="underline"
+                    >
+                        {part}
+                    </a>
+                );
             }
+            // Return plain text if it doesn't match any regex
             return part;
         });
     };
@@ -165,13 +195,13 @@ const ChatContainer = () => {
                     </div>
                 ))}
                 {showGoBackButton && (
-                <button
-                    onClick={scrollToLastMessage}
-                    className="sticky bottom-0 float-right bg-base-300/60 backdrop-blur rounded-full p-2 shadow-lg"
-                >
-                    <ArrowDown size={20} />
-                </button>
-            )}
+                    <button
+                        onClick={scrollToLastMessage}
+                        className="sticky bottom-0 float-right bg-base-300/60 backdrop-blur rounded-full p-2 shadow-lg"
+                    >
+                        <ArrowDown size={20} />
+                    </button>
+                )}
             </div>
 
             <MessageInput />
