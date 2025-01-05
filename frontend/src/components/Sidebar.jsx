@@ -3,6 +3,7 @@ import { useChatStore } from '../store/useChatStore'
 import SidebarSkeleton from './skeletons/SidebarSkeleton';
 import { Users } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
+import { formatMessageDate } from '../lib/utils';
 
 const Sidebar = () => {
     const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
@@ -58,7 +59,7 @@ const Sidebar = () => {
                         `}
                         title={user.fullName}
                     >
-                        <div className="relative sm:mx-auto lg:mx-0">
+                        <div className="relative sm:mx-auto lg:mx-0 min-w-12">
                             <img
                                 src={user.profilePic || "/avatar.png"}
                                 alt={user.fullName}
@@ -70,9 +71,18 @@ const Sidebar = () => {
                         </div>
 
                         {/* User info - only visible on larger screens */}
-                        <div className="sm:hidden lg:block min-w-0 text-left">
-                            <div className="sm:font-medium truncate">{user.fullName}</div>
-                            <div className="text-sm text-zinc-400">
+                        <div className="sm:hidden lg:block min-w-0 flex-1 text-left">
+                            <div className="sm:font-medium flex justify-between items-center">
+                                <span className='truncate'>
+                                    {user.fullName}
+                                </span>
+                                {user.lastMessage?.createdAt && (
+                                    <span className="text-xs text-gray-500">
+                                        {formatMessageDate(user.lastMessage.createdAt)}
+                                    </span>
+                                )}
+                            </div>
+                            <div className="text-sm text-zinc-400 truncate w-full">
                                 {user.lastMessage
                                     ? (
                                         <>
