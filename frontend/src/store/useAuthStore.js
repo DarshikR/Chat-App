@@ -3,7 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = "http://localhost:5001"
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 
 export const useAuthStore = create((set, get) => ({
     authUser: null,
@@ -84,30 +84,30 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
-    connectSocket: () => {
-        const { authUser } = get();
+        connectSocket: () => {
+            const { authUser } = get();
 
-        if (!authUser) return;
+            if (!authUser) return;
 
-        // Prevent duplicate socket connections
-        if (get().socket?.connected) return;
+            // Prevent duplicate socket connections
+            if (get().socket?.connected) return;
 
-        const socket = io("http://localhost:5001", {
-            query: { userId: authUser._id },
-        });
+            const socket = io("http://localhost:5001", {
+                query: { userId: authUser._id },
+            });
 
-        socket.connect();
+            socket.connect();
 
-        set({ socket });
+            set({ socket });
 
-        // Listen for online users
-        socket.on("getOnlineUsers", (onlineUsers) => {
-            set({ onlineUsers });
-        });
+            // Listen for online users
+            socket.on("getOnlineUsers", (onlineUsers) => {
+                set({ onlineUsers });
+            });
 
-        // Handle socket disconnection
-        socket.on("disconnect", () => {
-            console.warn("Socket disconnected");
-        });
-    },
+            // Handle socket disconnection
+            socket.on("disconnect", () => {
+                console.warn("Socket disconnected");
+            });
+        },
 }));
