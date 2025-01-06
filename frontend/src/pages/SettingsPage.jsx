@@ -1,7 +1,6 @@
-import React from 'react'
-import { useThemeStore } from '../store/useThemeStore';
-import { Send } from 'lucide-react';
-import { THEMES } from '../constants';
+import { THEMES } from "../constants";
+import { useThemeStore } from "../store/useThemeStore";
+import { Send } from "lucide-react";
 
 const PREVIEW_MESSAGES = [
     { id: 1, content: "Hey! How's it going?", isSent: false },
@@ -73,13 +72,15 @@ const SettingsPage = () => {
                                             key={message.id}
                                             className={`flex ${message.isSent ? "justify-end" : "justify-start"}`}
                                         >
-                                            <div className={`
+                                            <div
+                                                className={`
                                                 max-w-[80%] rounded-xl p-3 shadow-sm
                                                 ${message.isSent ? "bg-primary text-primary-content" : "bg-base-200"}
                                             `}
                                             >
                                                 <p className="text-sm">{message.content}</p>
-                                                <p className={`
+                                                <p
+                                                    className={`
                                                     text-[10px] mt-1.5
                                                     ${message.isSent ? "text-primary-content/70" : "text-base-content/70"}
                                             `}
@@ -114,5 +115,4 @@ const SettingsPage = () => {
         </div>
     );
 };
-
 export default SettingsPage;

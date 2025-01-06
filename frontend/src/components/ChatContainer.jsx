@@ -1,12 +1,12 @@
-import { useChatStore } from '../store/useChatStore';
-import React, { useEffect, useRef, useState } from 'react';
+import { useChatStore } from "../store/useChatStore";
+import React, { useEffect, useRef, useState } from "react";
 
-import ChatHeader from './ChatHeader';
-import MessageInput from './MessageInput';
-import MessageSkeleton from './skeletons/MessageSkeleton';
-import { useAuthStore } from '../store/useAuthStore';
-import { formatMessageTime, formatMessageDate } from '../lib/utils';
-import { ArrowDown } from 'lucide-react';
+import ChatHeader from "./ChatHeader";
+import MessageInput from "./MessageInput";
+import MessageSkeleton from "./skeletons/MessageSkeleton";
+import { useAuthStore } from "../store/useAuthStore";
+import { formatMessageTime, formatMessageDate } from "../lib/utils";
+import { ArrowDown } from "lucide-react";
 
 const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
@@ -17,13 +17,11 @@ const ChatContainer = () => {
 
     useEffect(() => {
         if (selectedUser) {
-            // Clear messages before loading new ones
-            // setMessages([]);
             getMessages(selectedUser._id);
             subscribeToMessages();
             return () => unsubscribeFromMessages();
         }
-    }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages ]);
+    }, [selectedUser._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
     useEffect(() => {
         setLoading(true);
@@ -39,6 +37,17 @@ const ChatContainer = () => {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages, loading]);
+
+    // Helper function to determine if a new date header should be shown
+    // const shouldShowDateHeader = (currentMessage, previousMessage) => {
+    //     const currentDate = new Date(currentMessage.createdAt).toDateString();
+    //     const previousDate = previousMessage
+    //         ? new Date(previousMessage.createdAt).toDateString()
+    //         : null;
+
+    //     return currentDate !== previousDate;
+    // };
+
 
     const groupMessagesByDate = (messages) => {
         return messages.reduce((groups, message) => {
@@ -62,17 +71,17 @@ const ChatContainer = () => {
 
     // Attach scroll event listener to the window
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener("scroll", handleScroll);
 
         return () => {
-            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener("scroll", handleScroll);
         };
     }, []);
 
     // Scroll to the last message when the "Go Back" button is clicked
     const scrollToLastMessage = () => {
         if (messageEndRef.current) {
-            messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            messageEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     };
 
@@ -81,15 +90,15 @@ const ChatContainer = () => {
         const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+\.[a-zA-Z]{2,})/g; // Match URLs (including www)
         const phoneRegex = /(\+?\d{1,3}[-.\s]??\d{1,4}[-.\s]??\d{1,4}[-.\s]??\d{1,9})/g; // Phone number regex
         const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g; // Email regex
-        const combinedRegex = new RegExp(`${urlRegex.source}|${phoneRegex.source}|${emailRegex.source}`, 'g'); // Combine all regexes
+        const combinedRegex = new RegExp(`${urlRegex.source}|${phoneRegex.source}|${emailRegex.source}`, "g"); // Combine all regexes
 
         // Match all parts (URLs, phone numbers, emails, and plain text in between)
         const matches = text.split(combinedRegex);
 
         return matches.map((part, index) => {
             if (urlRegex.test(part)) {
-                // Add `http://` to the URL if it's not already present
-                const url = part.startsWith('http://') || part.startsWith('https://') ? part : `http://${part}`;
+                // Add `http://` to the URL if it"s not already present
+                const url = part.startsWith("http://") || part.startsWith("https://") ? part : `http://${part}`;
                 return (
                     <a
                         key={index}
@@ -106,7 +115,7 @@ const ChatContainer = () => {
                 return (
                     <a
                         key={index}
-                        href={`tel:${part.replace(/\s+/g, '')}`} // Clean up phone numbers for `tel:` links
+                        href={`tel:${part.replace(/\s+/g, "")}`} // Clean up phone numbers for `tel:` links
                         className="underline"
                     >
                         {part}
@@ -124,7 +133,7 @@ const ChatContainer = () => {
                     </a>
                 );
             }
-            // Return plain text if it doesn't match any regex
+            // Return plain text if it doesn"t match any regex
             return part;
         });
     };
@@ -144,7 +153,7 @@ const ChatContainer = () => {
             <ChatHeader />
 
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto" onScroll={handleScroll}>
-                {messages.length > 0 ? null : (
+            {messages.length > 0 ? null : (
                     <div className="text-center">
                         No messages yet. <br /> Start the conversation now!
                     </div>
@@ -159,7 +168,7 @@ const ChatContainer = () => {
                         {groupMessages.map((message, i) => (
                             <div
                                 key={message._id}
-                                className={`chat ${message.senderId === authUser._id ? 'chat-end' : 'chat-start'
+                                className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"
                                     }`}
                                 ref={i === groupMessages.length - 1 ? messageEndRef : null}
                             >
@@ -168,8 +177,8 @@ const ChatContainer = () => {
                                         <img
                                             src={
                                                 message.senderId === authUser._id
-                                                    ? authUser.profilePic || '/avatar.png'
-                                                    : selectedUser.profilePic || '/avatar.png'
+                                                    ? authUser.profilePic || "/avatar.png"
+                                                    : selectedUser.profilePic || "/avatar.png"
                                             }
                                             alt="profile pic"
                                         />
