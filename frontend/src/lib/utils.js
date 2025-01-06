@@ -1,8 +1,8 @@
 export function formatMessageTime(date) {
-    return new Date(date).toLocaleTimeString("en-US", {
+    return new Date(date).toLocaleTimeString(undefined, {
         hour: "2-digit",
         minute: "2-digit",
-        hour12: false,
+        hour: "numeric",
     });
 };
 
@@ -37,4 +37,38 @@ export const formatMessageDate = (dateString) => {
 
     // For older dates (previous years)
     return messageDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" }); // e.g., "January 24, 2023"
+};
+
+export const formatSidebarDate = (dateString) => {
+    const messageDate = new Date(dateString);
+    const today = new Date();
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    const differenceInTime = today - messageDate;
+    const differenceInDays = Math.floor(differenceInTime / oneDay);
+
+    if (differenceInDays === 0) {
+        // Message sent today - return time in HH:MM format
+        return messageDate.toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
+
+    if (differenceInDays === 1) {
+        // Message sent yesterday
+        return "Yesterday";
+    }
+
+    if (differenceInDays < 7) {
+        // Message sent within the last 7 days - return weekday
+        return messageDate.toLocaleDateString(undefined, { weekday: "long" });
+    }
+
+    // Older messages - return DD/MM/YYYY format
+    return messageDate.toLocaleDateString(undefined, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
 };

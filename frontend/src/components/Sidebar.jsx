@@ -3,10 +3,10 @@ import { useChatStore } from '../store/useChatStore'
 import SidebarSkeleton from './skeletons/SidebarSkeleton';
 import { Users } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
-import { formatMessageDate } from '../lib/utils';
+import { formatSidebarDate } from '../lib/utils';
 
 const Sidebar = () => {
-    const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
+    const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
 
     const { onlineUsers, authUser } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
@@ -15,11 +15,15 @@ const Sidebar = () => {
     useEffect(() => {
         getUsers();
 
+        subscribeToMessages();
         const timer = setTimeout(() => {
             setLoading(false);
         }, 2000);
 
-        return () => clearTimeout(timer); // Cleanup timer on unmount
+        return () => {
+            clearTimeout(timer)
+            unsubscribeFromMessages();
+        }; // Cleanup timer on unmount
     }, [getUsers]);
 
     const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
@@ -73,26 +77,23 @@ const Sidebar = () => {
                         {/* User info - only visible on larger screens */}
                         <div className="sm:hidden lg:block min-w-0 flex-1 text-left">
                             <div className="sm:font-medium flex justify-between items-center">
-                                <span className='truncate'>
-                                    {user.fullName}
-                                </span>
+                                <span className="truncate">{user.fullName}</span>
+                                {/* Show last message date */}
                                 {user.lastMessage?.createdAt && (
                                     <span className="text-xs text-gray-500">
-                                        {formatMessageDate(user.lastMessage.createdAt)}
+                                        {formatSidebarDate(user.lastMessage.createdAt)}
                                     </span>
                                 )}
                             </div>
                             <div className="text-sm text-zinc-400 truncate w-full">
-                                {user.lastMessage
-                                    ? (
-                                        <>
-                                            {user.lastMessage.senderId === authUser._id ? 'Me: ' : ''}
-                                            {user.lastMessage.text || user.lastMessage.content}
-                                        </>
-                                    ) : (
-                                        onlineUsers.includes(user._id) ? 'Online' : 'Offline'
-                                    )
-                                }
+                                {user.lastMessage ? (
+                                    <>
+                                        {user.lastMessage.senderId === authUser._id ? "Me: " : ""}
+                                        {user.lastMessage.text || user.lastMessage.content}
+                                    </>
+                                ) : (
+                                    onlineUsers.includes(user._id) ? "Online" : "Offline"
+                                )}
                             </div>
                         </div>
                     </button>

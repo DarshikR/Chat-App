@@ -9,7 +9,7 @@ import { formatMessageTime, formatMessageDate } from '../lib/utils';
 import { ArrowDown } from 'lucide-react';
 
 const ChatContainer = () => {
-    const { messages, getMessages, isMessagesLoading, selectedUser, setMessages, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
+    const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
     const { authUser } = useAuthStore();
     const messageEndRef = useRef(null);
     const [showGoBackButton, setShowGoBackButton] = useState(false); // State for the "Go Back" button
@@ -18,12 +18,12 @@ const ChatContainer = () => {
     useEffect(() => {
         if (selectedUser) {
             // Clear messages before loading new ones
-            setMessages([]);
+            // setMessages([]);
             getMessages(selectedUser._id);
             subscribeToMessages();
             return () => unsubscribeFromMessages();
         }
-    }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages, setMessages]);
+    }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages ]);
 
     useEffect(() => {
         setLoading(true);
@@ -78,7 +78,7 @@ const ChatContainer = () => {
 
     // Helper function to parse and convert URLs to clickable links
     const renderMessageText = (text) => {
-        const urlRegex = /((https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g; // Updated URL regex to match domain-like text
+        const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+\.[a-zA-Z]{2,})/g; // Match URLs (including www)
         const phoneRegex = /(\+?\d{1,3}[-.\s]??\d{1,4}[-.\s]??\d{1,4}[-.\s]??\d{1,9})/g; // Phone number regex
         const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g; // Email regex
         const combinedRegex = new RegExp(`${urlRegex.source}|${phoneRegex.source}|${emailRegex.source}`, 'g'); // Combine all regexes
