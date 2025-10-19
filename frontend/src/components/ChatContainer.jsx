@@ -6,7 +6,7 @@ import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
 import { useAuthStore } from "../store/useAuthStore";
 import { formatMessageTime, formatMessageDate } from "../lib/utils";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ZoomIn, ZoomOut, Download, X } from "lucide-react";
 
 const ChatContainer = () => {
     const { messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
@@ -14,6 +14,10 @@ const ChatContainer = () => {
     const messageEndRef = useRef(null);
     const [showGoBackButton, setShowGoBackButton] = useState(false); // State for the "Go Back" button
     const [loading, setLoading] = useState(true); // New state for 1-second delay
+
+    // 🔥 NEW: image modal state
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [zoom, setZoom] = useState(1);
 
     useEffect(() => {
         if (selectedUser) {
@@ -153,7 +157,7 @@ const ChatContainer = () => {
             <ChatHeader />
 
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto" onScroll={handleScroll}>
-            {messages.length > 0 ? null : (
+                {messages.length > 0 ? null : (
                     <div className="text-center">
                         No messages yet. <br /> Start the conversation now!
                     </div>
@@ -194,7 +198,8 @@ const ChatContainer = () => {
                                         <img
                                             src={message.image}
                                             alt="Attachment"
-                                            className="mb-2 rounded-md max-w-[160px] sm:max-w-[200px]"
+                                            onClick={() => setSelectedImage(message.image)} // 🔥 OPEN modal
+                                            className="mb-2 rounded-md max-w-[160px] sm:max-w-[200px] cursor-pointer hover:opacity-90 transition"
                                         />
                                     )}
                                     {message.text && <p>{renderMessageText(message.text)}</p>}
@@ -214,6 +219,54 @@ const ChatContainer = () => {
             </div>
 
             <MessageInput />
+
+            {/* 🔥 Image Preview Modal */}
+            {selectedImage && (
+                <div className="fixed top-[64.8px] inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                    onClick={(e) => {
+                        // Close only if user clicks outside the image container
+                        if (e.target === e.currentTarget) setSelectedImage(null);
+                    }}
+                >
+                    <div className="relative flex flex-col items-center">
+                        <button
+                            onClick={() => setSelectedImage(null)}
+                            className="ml-auto z-30 bg-slate-100/20 rounded-full p-1.5"
+                        >
+                            <X size={20} />
+                        </button>
+
+                        <img
+                            src={selectedImage}
+                            alt="Zoomed"
+                            className="max-w-[90vw] max-h-[80vh] rounded-md transition-transform duration-300 my-2"
+                            style={{ transform: `scale(${zoom})` }}
+                        />
+
+                        <div className="flex gap-3 z-30 bg-slate-100/20 rounded-full p-1.5">
+                            <button
+                                onClick={() => setZoom((z) => Math.min(z + 0.25, 3))}
+                                className="bg-white/20 hover:bg-gray-600 p-1.5 rounded-full"
+                            >
+                                <ZoomIn />
+                            </button>
+                            <button
+                                onClick={() => setZoom((z) => Math.max(z - 0.25, 1))}
+                                className="bg-white/20 hover:bg-gray-600 p-1.5 rounded-full"
+                            >
+                                <ZoomOut />
+                            </button>
+                            <a
+                                href={selectedImage}
+                                download
+                                className="bg-white/20 hover:bg-gray-600 p-1.5 rounded-full"
+                            >
+                                <Download />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
