@@ -17,7 +17,7 @@ const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore()
   const { theme } = useThemeStore()
 
-  console.log({ onlineUsers })
+  // console.log({ onlineUsers })
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -27,7 +27,7 @@ const App = () => {
     checkAuth()
   }, [checkAuth]);
 
-  console.log({ authUser })
+  // console.log({ authUser })
 
   if (isCheckingAuth && !authUser)
     return (
@@ -37,7 +37,7 @@ const App = () => {
     )
 
   return (
-    <div>
+    <div className='h-dvh'>
       <Navbar />
 
       <Routes>
