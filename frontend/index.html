@@ -16,11 +16,11 @@
   <!-- ✅ Dynamic App Height Fix -->
   <script>
     function setAppHeight() {
-      const appHeight = window.innerHeight;
-      document.documentElement.style.setProperty('--app-height', `${appHeight}px`);
+      document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
     }
     window.addEventListener('resize', setAppHeight);
     window.addEventListener('orientationchange', setAppHeight);
+    window.addEventListener('DOMContentLoaded', setAppHeight);
     setAppHeight();
   </script>
 
@@ -38,7 +38,7 @@
 </head>
 
 <body>
-  <div class="h-[var(--app-height)]" id="root"></div>
+  <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
