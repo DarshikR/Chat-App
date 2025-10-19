@@ -37,7 +37,7 @@ const App = () => {
     )
 
   return (
-    <div className='h-[var(--app-height)]'>
+    <>
       <Navbar />
 
       <Routes>
@@ -61,7 +61,7 @@ const App = () => {
       </Routes>
 
       <Toaster />
-    </div>
+    </>
   )
 }
 
