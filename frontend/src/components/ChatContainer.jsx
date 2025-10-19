@@ -144,7 +144,7 @@ const ChatContainer = () => {
 
     if (isMessagesLoading || (loading && messages.length > 0)) {
         return (
-            <div className="flex flex-col flex-1 overflow-auto">
+            <div className="h-[var(--app-height)-64.8px] flex flex-col flex-1 overflow-auto">
                 <ChatHeader />
                 <MessageSkeleton messages={messages} authUser={authUser} />
                 <MessageInput />
@@ -153,7 +153,7 @@ const ChatContainer = () => {
     };
 
     return (
-        <div className="flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100">
+        <div className="h-[var(--app-height)-64.8px] flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100">
             <ChatHeader />
 
             <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto" onScroll={handleScroll}>
