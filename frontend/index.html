@@ -13,10 +13,32 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chat Application</title>
+  <!-- ✅ Dynamic App Height Fix -->
+  <script>
+    function setAppHeight() {
+      const appHeight = window.innerHeight;
+      document.documentElement.style.setProperty('--app-height', `${appHeight}px`);
+    }
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+    setAppHeight();
+  </script>
+
+  <style>
+    html,
+    body {
+      height: var(--app-height);
+      margin: 0;
+    }
+
+    #root {
+      height: var(--app-height);
+    }
+  </style>
 </head>
 
 <body>
-  <div class="h-dvh" id="root"></div>
+  <div class="h-[var(--app-height)]" id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 
