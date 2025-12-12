@@ -222,7 +222,7 @@ const ChatContainer = () => {
 
             {/* 🔥 Image Preview Modal */}
             {selectedImage && (
-                <div className="fixed top-[64.8px] inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
                     onClick={(e) => {
                         // Close only if user clicks outside the image container
                         if (e.target === e.currentTarget) setSelectedImage(null);
