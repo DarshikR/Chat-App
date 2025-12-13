@@ -213,7 +213,7 @@ const ChatContainer = () => {
                                                 />
                                             )}
                                             {message.text && <p>{renderMessageText(message.text)}</p>}
-                                            <span className={`${message.senderId === authUser._id && 'ml-auto'}`}>
+                                            <span className="ml-auto">
                                                 <time className="text-xs opacity-50">
                                                     {formatMessageTime(message.createdAt)}
                                                 </time>
