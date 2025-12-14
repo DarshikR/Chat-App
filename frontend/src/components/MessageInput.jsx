@@ -1,25 +1,29 @@
 import { useRef, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
+import { useAuthStore } from "../store/useAuthStore";
 import { Image, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const MessageInput = () => {
     const [text, setText] = useState("");
     const [imagePreview, setImagePreview] = useState(null);
-    const fileInputRef = useRef(null);
-    const { sendMessage } = useChatStore();
 
+    const fileInputRef = useRef(null);
+    const typingTimeoutRef = useRef(null);
+
+    const { sendMessage, selectedUser } = useChatStore();
+    const socket = useAuthStore((state) => state.socket);
+
+    // 🔹 IMAGE HANDLING (unchanged)
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (!file.type.startsWith("image/")) {
+        if (!file?.type.startsWith("image/")) {
             toast.error("Please select an image file");
             return;
         }
 
         const reader = new FileReader();
-        reader.onloadend = () => {
-            setImagePreview(reader.result);
-        };
+        reader.onloadend = () => setImagePreview(reader.result);
         reader.readAsDataURL(file);
     };
 
@@ -28,6 +32,21 @@ const MessageInput = () => {
         if (fileInputRef.current) fileInputRef.current.value = "";
     };
 
+    // 🔹 TYPING HANDLER (NEW)
+    const handleTyping = (e) => {
+        setText(e.target.value);
+
+        if (!socket || !selectedUser) return;
+
+        socket.emit("typing", { to: selectedUser._id });
+
+        clearTimeout(typingTimeoutRef.current);
+        typingTimeoutRef.current = setTimeout(() => {
+            socket.emit("stopTyping", { to: selectedUser._id });
+        }, 800);
+    };
+
+    // 🔹 SEND MESSAGE (slightly enhanced)
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if (!text.trim() && !imagePreview) return;
@@ -38,7 +57,10 @@ const MessageInput = () => {
                 image: imagePreview,
             });
 
-            // Clear form
+            // stop typing immediately after send
+            socket?.emit("stopTyping", { to: selectedUser._id });
+
+            // reset state
             setText("");
             setImagePreview(null);
             if (fileInputRef.current) fileInputRef.current.value = "";
@@ -76,8 +98,9 @@ const MessageInput = () => {
                         className="w-full input input-bordered rounded-lg input-sm sm:input-md"
                         placeholder="Type a message..."
                         value={text}
-                        onChange={(e) => setText(e.target.value)}
+                        onChange={handleTyping}   // 🔥 changed
                     />
+
                     <input
                         type="file"
                         accept="image/*"
@@ -88,12 +111,14 @@ const MessageInput = () => {
 
                     <button
                         type="button"
-                        className={`btn btn-circle btn-sm sm:btn-md ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+                        className={`btn btn-circle btn-sm sm:btn-md ${imagePreview ? "text-emerald-500" : "text-zinc-400"
+                            }`}
                         onClick={() => fileInputRef.current?.click()}
                     >
                         <Image size={20} />
                     </button>
                 </div>
+
                 <button
                     type="submit"
                     className="btn btn-circle btn-sm sm:btn-md"
@@ -105,4 +130,5 @@ const MessageInput = () => {
         </div>
     );
 };
+
 export default MessageInput;

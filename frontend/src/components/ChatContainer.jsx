@@ -16,6 +16,7 @@ const ChatContainer = () => {
         selectedUser,
         subscribeToMessages,
         unsubscribeFromMessages,
+        isTyping, subscribeToTyping, unsubscribeFromTyping
     } = useChatStore();
 
     const { authUser } = useAuthStore();
@@ -41,6 +42,14 @@ const ChatContainer = () => {
     }, [selectedUser?._id]);
 
     // ===============================
+    // Typing indicators
+    // ===============================
+    useEffect(() => {
+        subscribeToTyping();
+        return () => unsubscribeFromTyping();
+    }, []);
+
+    // ===============================
     // Artificial loading delay
     // ===============================
     useEffect(() => {
@@ -56,7 +65,7 @@ const ChatContainer = () => {
         if (!loading && messageEndRef.current) {
             messageEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
-    }, [messages, loading]);
+    }, [messages, loading, isTyping]);
 
     // ===============================
     // Group messages by date
@@ -97,40 +106,59 @@ const ChatContainer = () => {
     // Render links, phones, emails
     // ===============================
     const renderMessageText = (text) => {
-        const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+\.[a-zA-Z]{2,})/g;
-        const phoneRegex = /(\+?\d[\d\s.-]{7,})/g;
-        const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
-        const combinedRegex = new RegExp(
-            `${urlRegex.source}|${phoneRegex.source}|${emailRegex.source}`,
-            "g"
-        );
+        const combinedRegex =
+            /((?:https?:\/\/)?(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]{2,})+|\+?\d[\d\s.-]{7,}|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+
+        const isUrl = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/;
+        const isPhone = /^\+?\d[\d\s.-]{7,}$/;
+        const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
         return text.split(combinedRegex).map((part, i) => {
-            if (urlRegex.test(part)) {
-                const url = part.startsWith("http://") || part.startsWith("https://") ? part : `http://${part}`;
+            if (!part) return null;
+
+            if (isUrl.test(part)) {
+                const href = part.startsWith("http") ? part : `https://${part}`;
                 return (
-                    <a key={i} href={url} target="_blank" rel="noreferrer" className="underline">
+                    <a
+                        key={i}
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline break-all"
+                    >
                         {part}
                     </a>
                 );
             }
-            if (phoneRegex.test(part)) {
+
+            if (isPhone.test(part)) {
                 return (
-                    <a key={i} href={`tel:${part.replace(/\s+/g, "")}`} className="underline">
+                    <a
+                        key={i}
+                        href={`tel:${part.replace(/\s+/g, "")}`}
+                        className="underline"
+                    >
                         {part}
                     </a>
                 );
             }
-            if (emailRegex.test(part)) {
+
+            if (isEmail.test(part)) {
                 return (
-                    <a key={i} href={`mailto:${part}`} className="underline">
+                    <a
+                        key={i}
+                        href={`mailto:${part}`}
+                        className="underline"
+                    >
                         {part}
                     </a>
                 );
             }
-            return part;
+
+            return <span key={i}>{part}</span>;
         });
     };
+
 
     // ===============================
     // Loading state
@@ -202,7 +230,7 @@ const ChatContainer = () => {
                                             </div>
                                         </div>
                                         <div
-                                            className={`flex flex-col chat-bubble ${message.senderId === authUser._id ? "bg-primary text-primary-content" : "bg-base-200 text-base-content"} ${isLastMessageFromSender ? "chat-bubble-tail before:block" : `${message.senderId === authUser._id ? '!rounded-br-[var(--rounded-box,1rem)]' : '!rounded-bl-[var(--rounded-box,1rem)]' } before:hidden`}`}
+                                            className={`flex flex-col chat-bubble ${message.senderId === authUser._id ? "bg-primary text-primary-content" : "bg-base-200 text-base-content"} ${isLastMessageFromSender ? "chat-bubble-tail before:block" : `${message.senderId === authUser._id ? '!rounded-br-[var(--rounded-box,1rem)]' : '!rounded-bl-[var(--rounded-box,1rem)]'} before:hidden`}`}
                                         >
                                             {message.image && (
                                                 <img
@@ -233,6 +261,13 @@ const ChatContainer = () => {
                     >
                         <ArrowDown size={20} />
                     </button>
+                )}
+
+                {isTyping && (
+                    <div className="flex items-center gap-2 px-4 text-sm opacity-70">
+                        <div className="loading loading-dots loading-sm"></div>
+                        <span>{selectedUser?.fullName} is typing...</span>
+                    </div>
                 )}
             </div>
 
