@@ -180,7 +180,7 @@ const ChatContainer = () => {
         <div className="!h-[var(--app-height)-64.8px] flex flex-col flex-1 overflow-auto absolute z-10 top-0 left-0 right-0 bottom-0 sm:relative bg-base-100">
             <ChatHeader />
 
-            <div className="flex-1 space-y-3.5 p-2 sm:p-4 overflow-y-auto" onScroll={handleScroll}>
+            <div className="flex-1 flex flex-col gap-3.5 p-2 sm:p-4 overflow-y-auto" onScroll={handleScroll}>
                 {messages.length === 0 && (
                     <div className="text-center">
                         No messages yet. <br /> Start the conversation now!
@@ -257,14 +257,14 @@ const ChatContainer = () => {
                 {showGoBackButton && (
                     <button
                         onClick={scrollToLastMessage}
-                        className="sticky bottom-0 float-right bg-base-300/60 backdrop-blur rounded-full p-2 shadow-lg"
+                        className="sticky bottom-0 w-fit left-full bg-base-300/60 backdrop-blur rounded-full p-2 shadow-lg"
                     >
                         <ArrowDown size={20} />
                     </button>
                 )}
 
                 {isTyping && (
-                    <div className="flex items-center gap-2 px-4 text-sm opacity-70">
+                    <div className="flex items-center gap-2 px-4 text-sm opacity-70 !mt-auto">
                         <div className="loading loading-dots loading-sm"></div>
                         <span>{selectedUser?.fullName} is typing...</span>
                     </div>
