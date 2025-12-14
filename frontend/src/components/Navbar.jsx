@@ -17,9 +17,22 @@ const Navbar = () => {
             <div className="container mx-auto px-4 h-16">
                 <div className="flex items-center justify-between h-full">
                     <div className="flex items-center gap-8">
-                        <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
+                        <Link to="/" onClick={(e) => {setSelectedUser(null)}} className="flex items-center gap-2.5 hover:opacity-80 transition-all">
                             <div className="size-9 rounded-lg bg-primary/10 flex items-center justify-center">
                                 <MessageSquare className="w-5 h-5 text-primary" />
+                                {/* <svg xmlns="http://www.w3.org/2000/svg"
+                                    width="24" height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round">
+
+                                    <path d="M3 6 a2 2 0 0 1 2-2 h9 a2 2 0 0 1 2 2 v6 a2 2 0 0 1-2 2 H7 l-3 3 v-3 a2 2 0 0 1-1-2z"/>
+
+                                    <path d="M9 10 a2 2 0 0 1 2-2 h7 a2 2 0 0 1 2 2 v5 a2 2 0 0 1-2 2 h-5 l-2 2 v-2"/>
+                                </svg> */}
                             </div>
                             <h1 className="text-lg font-bold">Chatty</h1>
                         </Link>
